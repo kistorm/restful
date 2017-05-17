@@ -24,7 +24,7 @@ method:list、new、findOne、upsertOne、deleteById
 
 ## requests
 
-### **list  **
+### list  
 
 url: [http://localhost:3009/api/rest/tableInfo](http://localhost:3009/api/rest/tableInfo)
 
