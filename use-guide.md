@@ -42,11 +42,7 @@ url:[http://localhost:3009/api/rest/tableInfo/:id](http://localhost:3009/api/res
 
 method:delete
 
-
-
-return json
+### General Return Json
 
 { status :num\|\| 200 \|\| 500\|\| 404\|\|...,msg:string\|\|"",result:Array \|\| Entity \|\| {}}
-
-
 
