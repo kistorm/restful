@@ -20,7 +20,9 @@ npm install  &  run
 
 tools:restlet client （chrome plugin）
 
-## **request **
+requests:list、new、findOne、upsertOne、deleteById
+
+
 
 ### **list  **
 
