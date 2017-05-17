@@ -12,7 +12,7 @@ return:
 
 ### findOne
 
-url:[http://localhost:3009/api/rest/tableInfo](http://localhost:3009/api/rest/tableInfo)/1
+url:[http://localhost:3009/api/rest/tableInfo](http://localhost:3009/api/rest/tableInfo)/1?creator=kistorm
 
 method:get
 
@@ -31,8 +31,4 @@ Content-Type:application/json
 params:{ "creator":"fdfds" }
 
 return:{"status":200,"msg":"","result":{}}
-
-
-
-
 
