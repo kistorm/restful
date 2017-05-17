@@ -20,5 +20,17 @@ return:
 
 {"status":200,"msg":"","result":{"id":1,"creator":"fdfds","createdAt":"2017-05-17T06:19:55.000Z","updatedAt":"2017-05-17T06:19:55.000Z"}}
 
+### new
 
+url:[http://localhost:3009/api/rest/tableInfo](http://localhost:3009/api/rest/tableInfo)
+
+method:post
+
+Content-Type:application/json
+
+params:{ "creator":"fdfds" }
+
+return:
+
+{"status":200,"msg":"","result":{}}
 
