@@ -28,9 +28,11 @@ method:post
 
 Content-Type:application/json
 
-params:{ "creator":"fdfds" }
+params:{ "creator":"fdfds" }
 
-return:
+return:{"status":200,"msg":"","result":{}}
 
-{"status":200,"msg":"","result":{}}
+
+
+
 
