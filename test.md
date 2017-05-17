@@ -40,7 +40,17 @@ method:put
 
 Content-Type:application/json
 
-params req.body:{ "creator":"fdfds" }
+params req.body:{ "creator":"kistorm2" }
 
 return:{"status":200,"msg":"","result":{}}
+
+### deleteById
+
+url:[http://localhost:3009/api/rest/tableInfo](http://localhost:3009/api/rest/tableInfo)/1
+
+method:delete
+
+return:{"status":200,"msg":"","result":{}}
+
+
 
