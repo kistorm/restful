@@ -32,3 +32,17 @@ params:{ "creator":"fdfds" }
 
 return:{"status":200,"msg":"","result":{}}
 
+
+
+### upsertById
+
+url:[http://localhost:3009/api/rest/tableInfo](http://localhost:3009/api/rest/tableInfo)/1
+
+method:post
+
+Content-Type:application/json
+
+params req.body:{ "creator":"fdfds" }
+
+return:{"status":200,"msg":"","result":{}}
+
