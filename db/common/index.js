@@ -131,8 +131,8 @@ function crud(tableName) {
 
     Executer.update = function (param, callback) {
         //修改 ,data = 将被修改的对象
-        var entities = param.data;
-        var where = param.where || null;
+        var entities = param.data || {};
+        var where = param.where || param.id ? {id: param.id} : null;
         callback = callback_pre_exec(callback);
         sequelize.transaction(function (t) {
             if (Array.isArray(entities)) {
