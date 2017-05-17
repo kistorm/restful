@@ -8,8 +8,6 @@ tools:restlet client （chrome plugin）
 
 ## **request **
 
-#### 
-
 ### **list  **
 
 url: [http://localhost:3009/api/rest/tableInfo](http://localhost:3009/api/rest/tableInfo)
