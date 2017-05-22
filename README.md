@@ -24,7 +24,7 @@ method:list、new、findOne、upsertOne、deleteById
 
 ## requests
 
-### list  
+### list
 
 url: [http://localhost:3009/api/rest/tableInfo](http://localhost:3009/api/rest/tableInfo)
 
@@ -40,7 +40,7 @@ params:{field1:xx,field2:xx.....}
 
 ### findOne
 
-url:[http://localhost:3009/api/rest/tableInfo/:id](http://localhost:3009/api/rest/tableInfo/:id)
+url:[http://localhost:3009/api/rest/tableInfo/:id](http://localhost:3009/api/rest/tableInfo/:id)?param1=value1&param2=value2
 
 method:get
 

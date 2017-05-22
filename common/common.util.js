@@ -1,10 +1,7 @@
 /**
- * Created by user on 2017/5/22.
- */
-/**
  * Created by user on 2017/5/5.
  */
-var _ = require('lodash'), fs = require('fs'),path = require('path');
+var _ = require('lodash');
 var mergeParams = function (req, paramsObject) {
     var queryParams = req.query;
     var bodyParams = req.body;
@@ -22,20 +19,8 @@ var response = function (res, status, msg, result) {
 var response_overwrite = function (res, err, result) {
     var status, message;
     if (err) {
-        switch (typeof err) {
-            case "object":
-                status = err.status;
-                message = err.message;
-                break;
-            case  "string":
-                status = 500;
-                message = err;
-                break;
-            default:
-                status = 500;
-                message = "";
-                break;
-        }
+        status = err.status;
+        message = err.message;
     }
     result = nonNegativeInteger(result) ? undefined : result;
     response(res, status, message, result);
@@ -49,8 +34,23 @@ var callback_pre_exec = function (callback) {
     }
     return callback;
 }
-var init = function () {
-    var run_logs = path.resolve(__dirname, "..", "logs", "run.json");
+var sqlTypeEnums = {
+    SELECT: 'SELECT',
+    INSERT: 'INSERT',
+    UPDATE: 'UPDATE',
+    BULKUPDATE: 'BULKUPDATE',
+    BULKDELETE: 'BULKDELETE',
+    DELETE: 'DELETE',
+    UPSERT: 'UPSERT',
+    VERSION: 'VERSION',
+    SHOWTABLES: 'SHOWTABLES',
+    SHOWINDEXES: 'SHOWINDEXES',
+    DESCRIBE: 'DESCRIBE',
+    RAW: 'RAW',
+    FOREIGNKEYS: 'FOREIGNKEYS'
+}
+var watch = function () {
+    var run_logs = require('path').resolve(__dirname, "..", "logs", "run.json");
     var env_package = require(run_logs);
     if (!env_package || !env_package.run) {
         var sequelize = require('../db/').instance.sequelize;
@@ -76,22 +76,12 @@ var init = function () {
     }
 }
 
-var mergerExport = function (root) {
-    var obj = {};
-    var dir = fs.readdirSync(root);
-    _.each(dir, function (value) {
-        if (value != "index.js") {
-            _.assign(obj, require(path.join(root, value)));
-        }
-    })
-    return obj;
-}
 
-exports.util = {
+module.exports = {
     nonNegativeInteger: nonNegativeInteger,
     mergeParams: mergeParams,
     response_overwrite: response_overwrite,
     callback_pre_exec: callback_pre_exec,
-    mergerExport: mergerExport,
-    init: init
-};
+    sqlTypeEnums: sqlTypeEnums,
+    watch: watch
+}
