@@ -73,7 +73,7 @@ var watch = function () {
 }
 
 
-module.exports = {
+exports.util = {
     nonNegativeInteger: nonNegativeInteger,
     mergeParams: mergeParams,
     response_overwrite: response_overwrite,

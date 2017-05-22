@@ -24,7 +24,7 @@ var terminal = {
 }
 
 
-exports.enum = {
+exports.enums = {
     sqlTypeEnums:sqlTypeEnums,
     terminal:terminal
 };
