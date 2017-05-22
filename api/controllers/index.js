@@ -3,7 +3,9 @@
  */
 var models = require('../../db').models;
 var service = require('./service');
-var util = require('../../lib/util');
+var util = require('../../common').util;
+
+
 var aop = function (req, res, exec_fn) {
     var input = util.mergeParams(req);
     exec_fn(input, function (err, result) {

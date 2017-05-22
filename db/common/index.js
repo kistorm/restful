@@ -131,8 +131,8 @@ function crud(tableName) {
 
     Executer.update = function (param, callback) {
         //修改 ,data = 将被修改的对象
-        var entities = param.data;
-        var where = param.where || null;
+        var entities = param || {};
+        var where = param.where || param.id ? {id: param.id} : null;
         callback = callback_pre_exec(callback);
         sequelize.transaction(function (t) {
             if (Array.isArray(entities)) {
@@ -156,7 +156,6 @@ function crud(tableName) {
     Executer.create = function (entity, callback) {
         //添加
         console.info("create entity by", Model, JSON.stringify(entity || {}));
-
         callback = callback_pre_exec(callback);
         sequelize.transaction(function (t) {
             if (Array.isArray(entity)) {
@@ -177,20 +176,29 @@ function crud(tableName) {
 
     Executer.destory = function (params, callback) {
         //删除
+        var where = params.id ? {id: params.id} : null;
         callback = callback_pre_exec(callback);
         console.info("destroy entity by", Model, JSON.stringify(params || {}));
-        sequelize.transaction(function (t) {
-            var opts = {
-                transaction: t,
-                where: params.where,
-                force: params.force
+        Model.findAll({where: where}).then(function (model) {
+            if (!model || !model.dataValues) {
+                return callback("the entity was not exists!", null);
+            } else{
+                return sequelize.transaction(function (t) {
+                    var opts = {
+                        transaction: t,
+                        where: where,
+                        force: params.force || true
+                    }
+                    return Model.destroy(opts);
+                }).then(function () {
+                    // console.log(data);
+                    callback(null);
+                }).catch(function (error) {
+                    callback(error)
+                })
             }
-            return Model.destroy(opts);
-        }).then(function () {
-            // console.log(data);
-            callback(null);
         }).catch(function (error) {
-            callback(error)
+            callback(error, null);
         })
     }
 

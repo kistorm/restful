@@ -10,10 +10,8 @@ var controllers = require('../controllers');
 module.exports = function (app) {
     var dynamicLoadRouter = function (route_path, controller) {
         var locate = route_path + '/:id';
-        //console.log(route_path,locate);
         app.route(route_path).get(controller.list).post(controller.post);
-        app.route(locate).get(controller.get).delete(controller.delete).put(controller.put)
-        console.log(route_path,locate)
+        app.route(locate).get(controller.get).delete(controller.delete).put(controller.put);
     };
     models.forEach(function (modelName) {
         var route_path = "/api/rest/" + modelName;
