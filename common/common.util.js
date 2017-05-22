@@ -19,13 +19,24 @@ var response = function (res, status, msg, result) {
 var response_overwrite = function (res, err, result) {
     var status, message;
     if (err) {
-        status = err.status;
-        message = err.message;
+        switch (typeof err) {
+            case "object":
+                status = err.status;
+                message = err.message;
+                break;
+            case  "string":
+                status = 500;
+                message = err;
+                break;
+            default:
+                status = 500;
+                message = "";
+                break;
+        }
     }
     result = nonNegativeInteger(result) ? undefined : result;
     response(res, status, message, result);
 }
-
 var callback_pre_exec = function (callback) {
     if (!callback || typeof callback != 'function') {
         callback = function (err, result) {
@@ -33,21 +44,6 @@ var callback_pre_exec = function (callback) {
         };
     }
     return callback;
-}
-var sqlTypeEnums = {
-    SELECT: 'SELECT',
-    INSERT: 'INSERT',
-    UPDATE: 'UPDATE',
-    BULKUPDATE: 'BULKUPDATE',
-    BULKDELETE: 'BULKDELETE',
-    DELETE: 'DELETE',
-    UPSERT: 'UPSERT',
-    VERSION: 'VERSION',
-    SHOWTABLES: 'SHOWTABLES',
-    SHOWINDEXES: 'SHOWINDEXES',
-    DESCRIBE: 'DESCRIBE',
-    RAW: 'RAW',
-    FOREIGNKEYS: 'FOREIGNKEYS'
 }
 var watch = function () {
     var run_logs = require('path').resolve(__dirname, "..", "logs", "run.json");
@@ -82,6 +78,5 @@ module.exports = {
     mergeParams: mergeParams,
     response_overwrite: response_overwrite,
     callback_pre_exec: callback_pre_exec,
-    sqlTypeEnums: sqlTypeEnums,
-    watch: watch
+    init: init
 }
