@@ -46,6 +46,7 @@ var onError = function (error) {
             break;
         default:
             throw error;
+
     }
 }
 var onListening = function () {

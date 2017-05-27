@@ -1,7 +1,7 @@
 /**
  * Created by user on 2017/5/5.
  */
-var _ = require('lodash');
+var _ = require('lodash'), fs = require('fs'), path = require('path');
 var mergeParams = function (req, paramsObject) {
     var queryParams = req.query;
     var bodyParams = req.body;
@@ -45,9 +45,15 @@ var callback_pre_exec = function (callback) {
     }
     return callback;
 }
-var watch = function () {
-    var run_logs = require('path').resolve(__dirname, "..", "logs", "run.json");
-    var env_package = require(run_logs);
+var init = function () {
+    var path_log = path.resolve(__dirname, "..", "logs");
+    var path_log_json = path.resolve(path_log, "run.json");
+    var env_package = {};
+    if (!fs.existsSync(path_log)) {
+        fs.mkdirSync(path_log);
+    } else {
+        env_package = fs.existsSync(path_log_json) ? require(path_log_json) : {};
+    }
     if (!env_package || !env_package.run) {
         var sequelize = require('../db/').instance.sequelize;
         sequelize.sync({force: true, logging: console.error})
@@ -58,7 +64,7 @@ var watch = function () {
                     latest_time: new Date(),
                     run_time: [new Date()]
                 };
-                require('fs').writeFile(run_logs, JSON.stringify(env_package));
+                fs.writeFileSync(path_log_json, JSON.stringify(env_package));
                 console.log("strut sync success");
             })
             .catch(function (err) {
@@ -68,15 +74,25 @@ var watch = function () {
         env_package.run.total += 1;
         env_package.run.run_time.push(new Date());
         env_package.run.latest_time = new Date();
-        require('fs').writeFile(run_logs, JSON.stringify(env_package));
+        fs.writeFileSync(path_log_json, JSON.stringify(env_package));
     }
 }
 
+var mergerExport = function (dir) {
+    var dirs = fs.readdirSync(dir), obj = {};
+    _.each(dirs, function (d) {
+        if (d != "index.js") {
+            _.assign(obj, require(path.join(dir, d)));
+        }
+    })
+    return obj;
+}
 
 exports.util = {
     nonNegativeInteger: nonNegativeInteger,
     mergeParams: mergeParams,
     response_overwrite: response_overwrite,
     callback_pre_exec: callback_pre_exec,
-    init: init
+    init: init,
+    mergerExport: mergerExport
 }
