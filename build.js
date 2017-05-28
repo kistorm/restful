@@ -59,7 +59,10 @@ var onListening = function () {
 var filter404 = function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
-    next(err);
+    err.msg = 404;
+    err.result = 404;
+    //next(err);
+    res.send(err);
 }
 var env = function (err, req, res) {
     res.locals.message = err.message;

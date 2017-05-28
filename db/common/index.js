@@ -43,11 +43,34 @@ function crud(tableName) {
 
     Executer.model = Model;
 
-    Executer.acquire = function (param, callback) {
-        //查询单条数据
-        var options = param.where || {};
+    Executer.list = function (param, callback) {
+        var where = param.where;
+        var group = param.group || "";
+        var order = param.order || [];
+        var limit = param.limit;
+        var offset = param.offset || 0;
         callback = callback_pre_exec(callback);
-        Model.findOne(options).then(function (model) {
+        Model.findAll({
+            where: where,
+            group: group,
+            order: order,
+            limit: limit,
+            offset: offset,
+            raw: true
+        }).then(function (model) {
+            if (!model) {
+                return callback([]);
+            }
+            callback(null, model);
+        }).catch(function (error) {
+            callback(error);
+        })
+    };
+
+    Executer.acquire = function (id, callback) {
+        //查询单条数据
+        callback = callback_pre_exec(callback);
+        Model.findById(id).then(function (model) {
             if (!model || !model.dataValues) {
                 return callback(null, null);
             }
@@ -55,7 +78,7 @@ function crud(tableName) {
         }).catch(function (error) {
             callback(error, null);
         })
-    }
+    };
 
     Executer.queryBySQL = function (param, callback) {
         var sql = param.sql;
@@ -80,76 +103,49 @@ function crud(tableName) {
         })
     };
 
-    Executer.list = function (param, callback) {
-        var where = param.where;
-        var group = param.group || "";
-        var order = param.order || [];
-        var limit = param.limit || 20;
-        var offset = param.offset || 0;
+    Executer.update = function (values,param, callback) {
+        //修改 ,data = 将被修改的对象
+        var entities = values || {};
+        var where = param.where || {};
+        var fields = param.fields || null;
         callback = callback_pre_exec(callback);
-        Model.findAll({
-            where: where,
-            group: group,
-            order: order,
-            limit: limit,
-            offset: offset,
-            raw: true
-        }).then(function (model) {
-            if (!model) {
-                return callback({message: ""});
-            }
-            callback(null, model);
+        sequelize.transaction(function (t) {
+            return Model.update(values, {
+                where: where,
+                fields:fields,
+                transaction: t
+            });
+        }).then(function (rows) {
+            callback(null,rows[0]);
         }).catch(function (error) {
-            callback(error);
-        })
-    };
-
-    Executer.listAndPaging = function (param, callback) {
-        //获取列表，可分页
-        var where = param.where;
-        var group = param.group || "";
-        var order = param.order || [];
-        var limit = param.limit || 20;
-        var offset = param.offset || 0;
-        callback = callback_pre_exec(callback);
-        Model.findAndCountAll({
-            where: where,
-            group: group,
-            order: order,
-            limit: limit,
-            offset: offset,
-            raw: true
-        }).then(function (model) {
-            if (!model) {
-                return callback({message: ""});
-            }
-            callback(null, model);
-        }).catch(function (error) {
-            callback(error);
+            callback(error)
         })
     }
 
-    Executer.update = function (param, callback) {
-        //修改 ,data = 将被修改的对象
-        var entities = param || {};
-        var where = param.where || param.id ? {id: param.id} : null;
+    Executer.destory = function (params, callback) {
+        //删除
+        var where = params.where || (params.id ? {id: params.id} : {});
         callback = callback_pre_exec(callback);
-        sequelize.transaction(function (t) {
-            if (Array.isArray(entities)) {
-                return Model.bulkUpdate(entities, {
-                    where: where,
-                    transaction: t
-                });
+        console.info("destroy entity by", Model, JSON.stringify(params || {}));
+        Model.findAll({where: where}).then(function (model) {
+            if (model.length == 0) {
+                return callback("the entity was not exists!", null);
+            } else {
+                return sequelize.transaction(function (t) {
+                    var opts = {
+                        transaction: t,
+                        where: where,
+                        force: params.force || true
+                    }
+                    return Model.destroy(opts);
+                }).then(function (data) {
+                    callback(null,data);
+                }).catch(function (error) {
+                    callback(error)
+                })
             }
-            return Model.update(entities, {
-                where: where,
-                transaction: t
-            });
-        }).then(function () {
-            // console.log(data);
-            callback(null);
         }).catch(function (error) {
-            callback(error)
+            callback(error, null);
         })
     }
 
@@ -160,45 +156,20 @@ function crud(tableName) {
         sequelize.transaction(function (t) {
             if (Array.isArray(entity)) {
                 return Model.bulkCreate(entity, {
+                    benchmark:true,
+                    isNewRecord:true,
                     transaction: t
                 });
             }
             return Model.create(entity, {
+                benchmark:true,
+                isNewRecord:true,
                 transaction: t
             });
-        }).then(function () {
-            // console.log(data);
-            callback(null);
+        }).then(function (data) {
+            callback(null,data);
         }).catch(function (error) {
             callback(error)
-        })
-    }
-
-    Executer.destory = function (params, callback) {
-        //删除
-        var where = params.id ? {id: params.id} : null;
-        callback = callback_pre_exec(callback);
-        console.info("destroy entity by", Model, JSON.stringify(params || {}));
-        Model.findAll({where: where}).then(function (model) {
-            if (!model || !model.dataValues) {
-                return callback("the entity was not exists!", null);
-            } else{
-                return sequelize.transaction(function (t) {
-                    var opts = {
-                        transaction: t,
-                        where: where,
-                        force: params.force || true
-                    }
-                    return Model.destroy(opts);
-                }).then(function () {
-                    // console.log(data);
-                    callback(null);
-                }).catch(function (error) {
-                    callback(error)
-                })
-            }
-        }).catch(function (error) {
-            callback(error, null);
         })
     }
 

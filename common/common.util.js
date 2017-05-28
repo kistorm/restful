@@ -2,11 +2,11 @@
  * Created by user on 2017/5/5.
  */
 var _ = require('lodash'), fs = require('fs'), path = require('path');
-var mergeParams = function (req, paramsObject) {
+var mergeParams = function (req) {
     var queryParams = req.query;
     var bodyParams = req.body;
     var variantsParams = req.params;
-    var __ = _.assign(queryParams, bodyParams, variantsParams, paramsObject);
+    var __ = _.assign(queryParams, bodyParams, variantsParams);
     return __;
 }
 var nonNegativeInteger = function (n) {
@@ -75,6 +75,7 @@ var init = function () {
         env_package.run.run_time.push(new Date());
         env_package.run.latest_time = new Date();
         fs.writeFileSync(path_log_json, JSON.stringify(env_package));
+        console.log("strut sync success");
     }
 }
 

@@ -1,0 +1,255 @@
+
+<html>
+<head>
+    <title>LibGoodsController测试页面</title>
+    <meta name="layout" content="main" charset="UTF-8"/>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script>
+        $(function() {
+            //列表选中ID
+            var tableSelectId;
+            //列表选中tr
+            var selTr = null;
+            //列表JSON
+            var printjson;
+
+            //初始化过滤器
+            Vue.filter('isAuditFormatter', function (value) {
+                if(value == true){
+                    return "已审核";
+                }
+                else return "未审核";
+            });
+
+            Vue.filter('isEnabledFormatter',function (value){
+                if(value == true){
+                    return "启用";
+                }
+                else return "停用";
+            });
+
+            Vue.filter('goodsTypeFormatter',function (value){
+                if(value == "1"){
+                    return "零售";
+                }
+                else return "餐饮";
+            });
+
+            var OBJECT_CRUD = new Vue({
+                el: '#object_crud',
+                data: {
+                    //显示JSON
+                    message:'',
+                    //对象
+                    object : '',
+                    //对象数组
+                    list : ''
+                },
+                methods: {
+                    //分页查询并显示数据
+                    showData: function () {
+                        var _self = this;
+                        var url = "...";
+                        $.ajax({
+                            type: 'GET',
+                            url: url,
+                            success:function(data) {
+                                printjson = JSON.stringify(data);
+                                _self.list = data.data.rows;
+                            }
+                        });
+                    },
+                    //显示查询JSON
+                    showJSON:function(){
+                        this.message = printjson;
+                    },
+                    //清空查询返回JSON
+                    clearJSON:function(){
+                        this.message = "";
+                    },
+                    //选中列表行 点击事件
+                    onClick:function (evt) {
+                        var _self = this;
+                        var el = evt.srcElement?evt.srcElement:evt.target;
+                        if(el.tagName.toUpperCase() !="TD") return;
+                        var tr = el.parentNode;
+                        tr.style.backgroundColor="yellow";
+                        if(selTr !=null)
+                        {
+                            selTr.style.backgroundColor ="white";
+                        }
+                        selTr = tr;
+                        tableSelectId = selTr.cells[0].innerHTML;
+                        //通过ID获取对象
+                        var url = "...";
+                        $.ajax({
+                            type: 'GET',
+                            url: url,
+                            success:function(data) {
+                                if(data.result == "true"){
+                                    _self.object = data.data;
+                                }
+                            }
+                        });
+                    },
+                    //启用 选中的 记录
+                    enable:function(){
+                        var _self = this;
+                        var url = "...";
+                        $.ajax({
+                            type: 'GET',
+                            url: url,
+                            success:function(data) {
+                                _self.message = JSON.stringify(data);
+                                if(data.result == "true"){
+                                    _self.showData();
+                                }
+                            }
+                        });
+                    },
+                    //停用 选中的 记录
+                    unEnable:function(){
+                        var _self = this;
+                        var url = "...";
+                        $.ajax({
+                            type: 'GET',
+                            url: url,
+                            success:function(data) {
+                                _self.message = JSON.stringify(data);
+                                if(data.result == "true"){
+                                    _self.showData();
+                                }
+                            }
+                        });
+                    },
+                    //删除 记录
+                    delete:function(){
+                        var _self = this;
+                        var url = "...";
+                        $.ajax({
+                            type: 'GET',
+                            url: url,
+                            success:function(data) {
+                                _self.message = JSON.stringify(data);
+                                if(data.result == "true") {
+                                    _self.showData();
+                                }
+                            }
+                        });
+                    },
+                    save:function(){
+                        var _self = this;
+                        var url = "...";
+                        $.ajax({
+                            type: 'POST',
+                            url: url,
+                            data:{
+                                id:$('#id').val()
+                                /*...*/
+                            },
+                            success:function(data) {
+                                _self.message = JSON.stringify(data);
+                                if(data.result == "true"){
+                                    _self.showData();
+                                }
+                            }
+                        });
+                    }
+                }
+            })
+        });
+    </script>
+</head>
+
+<body>
+<div style="text-align: center" id="test_title">
+    <font color="#ff1493" size="6">商品信息管理服务(web-service-libGoods)接口测试</font> <br><br><br>
+</div>
+
+
+<div id="object_crud">
+
+    测试介绍：<br><br>
+    <div class="description" style="height:auto;width:auto;border-top: 1px dashed #F00;border-bottom: 1px dashed #F00;border-left: 1px dashed #F00;border-right: 1px dashed #F00">
+        1.条件查询并分页（查询条件：商品名称模糊查询，商品类别，分页参数）<br>
+        2.新增商品<br>
+        3.更新商品<br>
+        4.删除商品<br>
+        5.启用/停用商品
+    </div><br><br>
+
+    1.商品名称:<g:textField name="queryStr" id="queryStr1" value="佳能"></g:textField>
+    商品类型 :
+    <g:radio value="2" name="goodsTypeSearch"></g:radio>餐饮
+    <g:radio value="1" name="goodsTypeSearch" checked="true"></g:radio>零售
+    列表参数： 当前页：<g:textField name="page" value="0"></g:textField> 每页显示：<g:textField name="pageSize" value="20"></g:textField>
+    <button v-on:click="showData">查询</button>
+    <button v-on:click="showJSON">显示JSON</button>
+    <br><br>
+
+    测试结果JSON：<button v-on:click="clearJSON">清空测试结果</button>
+    <br><br>
+    <div class="jsonResult" style="height:auto;width:auto;border-top: 1px dashed #F00;
+    border-bottom: 1px dashed #F00;border-left: 1px dashed #F00;border-right: 1px dashed #F00">
+        {{message}}
+    </div><br><br>
+
+    测试列表：
+    <br><br>
+    <div style="height:auto;width:auto;border-top: 1px dashed #F00;
+    border-bottom: 1px dashed #F00;border-left: 1px dashed #F00;border-right: 1px dashed #F00">
+        <table id="table" style="border:2";>
+            <thead>
+            <tr>
+                <th style='width:3%; text-align: left'>ID</th>
+                <th style='width:10%; text-align: left'>商品编码</th>
+                <th style='width:5%; text-align: left'>商品类别</th>
+                <th style='width:10%; text-align: left'>商品名称</th>
+                <th style='width:10%; text-align: left'>简称</th>
+                <th style='width:5%; text-align: left'>是否审核</th>
+                <th style='width:5%; text-align: left'>是否启用</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="data in list" v-on:click="onClick">
+                <td>{{data.id}}</td>
+                <td>{{data.barcode}}</td>
+                <td>{{data.goodsType | goodsTypeFormatter}}</td>
+                <td>{{data.name}}</td>
+                <td>{{data.shortName}}</td>
+                <td>{{data.isAudit | isAuditFormatter}}</td>
+                <td>{{data.isEnabled | isEnabledFormatter}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br><br>
+    2.<button v-on:click="save">保存</button> <br><br>
+    3.<button v-on:click="save">更新</button> <br><br>
+    4.<button v-on:click="delete">删除</button> <br><br>
+    5.<button v-on:click="enable">启用</button>&nbsp;
+    <button v-on:click="unEnable">停用</button>br><br>
+
+    商品对象：
+    <div class="z333" style="height:auto;width:auto;border-top: 1px dashed #F00; border-bottom: 1px dashed #F00;border-left: 1px dashed #F00;border-right: 1px dashed #F00"><br>
+        <g:form name="myform">
+            ID（测试启/停用，删除）：<g:textField name="id" v-model="object.id"></g:textField><br><br>
+            商品编码：<g:textField name="barcode" v-model="object.barcode"></g:textField><font color="red">  *</font><br><br>
+            商品名称：<g:textField name="name" v-model="object.name"></g:textField><font color="red">  *</font><br><br>
+            商品类别：<g:radio value="2" name="goodsType" v-model="object.goodsType"></g:radio>餐饮
+            <g:radio value="1" name="goodsType" v-model="object.goodsType"></g:radio>零售<font color="red">  *</font><br><br>
+            商品简称：<g:textField name="shortName" v-model="object.shortName"></g:textField><br><br>
+            商品分类：<g:textField name="categoryName" v-model="object.categoryName"></g:textField><br><br>
+            品牌编码：<g:textField name="brandCode" v-model="object.brandCode"></g:textField><br><br>
+            产地：<g:textField name="productArea" v-model="object.productArea"></g:textField><br><br>
+            单位：<g:textField name="unitName" v-model="object.unitName"></g:textField><br><br>
+            规格：<g:textField name="goodsSpec" v-model="object.goodsSpec"></g:textField><br><br>
+            拼音码：<g:textField name="pyCode" v-model="object.pyCode"></g:textField><br><br>
+            备注：<g:textField name="remark" v-model="object.remark"></g:textField><br><br>
+        </g:form>
+    </div><br><br>
+</div>
+</body>
+</html>
