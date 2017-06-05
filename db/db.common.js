@@ -28,22 +28,18 @@
  *
  */
 var $ = require('../common');
-var enums = $.enums;
-var sqlTypeEnums = enums.sqlTypeEnums;
+var sqlTypeEnums = $.enums.sqlTypeEnums;
 var callback_pre_exec = $.util.callback_pre_exec;
 var instance = require('./db.instance.js');
 var sequelize = instance.sequelize;
+
+
 module.exports = function processer(tableName) {
     var Model = instance[tableName];
-
     if (!tableName || !Model) throw new Error("unknow table", tableName);
-
-    console.info("Constructor Exec done -->", tableName);
-
+    console.warn("Dynamically Create instance done , Model Name:", tableName);
     var Executer = {};
-
     Executer.model = Model;
-
     Executer.list = function (param, callback) {
         var where = param.where;
         var group = param.group || "";
@@ -67,7 +63,6 @@ module.exports = function processer(tableName) {
             callback(error);
         })
     };
-
     Executer.acquire = function (id, callback) {
         //查询单条数据
         callback = callback_pre_exec(callback);
@@ -80,7 +75,6 @@ module.exports = function processer(tableName) {
             callback(error, null);
         })
     };
-
     Executer.queryBySQL = function (param, callback) {
         var sql = param.sql;
         var bind = param.keys || null;
@@ -103,7 +97,6 @@ module.exports = function processer(tableName) {
             callback(error)
         })
     };
-
     Executer.update = function (values, param, callback) {
         //修改 ,data = 将被修改的对象
         var entities = values || {};
@@ -121,8 +114,7 @@ module.exports = function processer(tableName) {
         }).catch(function (error) {
             callback(error)
         })
-    }
-
+    };
     Executer.destory = function (params, callback) {
         //删除
         var where = params.where || (params.id ? {id: params.id} : {});
@@ -148,8 +140,7 @@ module.exports = function processer(tableName) {
         }).catch(function (error) {
             callback(error, null);
         })
-    }
-
+    };
     Executer.create = function (entity, callback) {
         //添加
         console.info("create entity by", Model, JSON.stringify(entity || {}));
@@ -172,8 +163,6 @@ module.exports = function processer(tableName) {
         }).catch(function (error) {
             callback(error)
         })
-    }
-
+    };
     return Executer;
-
 }

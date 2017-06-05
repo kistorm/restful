@@ -1,12 +1,11 @@
 /**
  * Created by kistorm on 2017/6/5.
  */
-var data = require('./data');
-var CRUD = require('./index.js').crud;
-var baseinfo = new CRUD("example");
+
 exports.init = function (callback) {
-    callback = function (err, result) {
-    };
+    var data = require('./data');
+    var DB_PROCESS = require('./index.js').common;
+    var baseinfo = new DB_PROCESS("example");
     var sqlParams = {
         sql: "truncate table `example` ",
         keys: [],
@@ -14,6 +13,6 @@ exports.init = function (callback) {
     }
     baseinfo.queryBySQL(sqlParams, function (err, result) {
         if (!err) baseinfo.create(data, callback);
-        return callback(err, result);
+        return callback;
     })
 }

@@ -9,6 +9,6 @@ var models = fs.readdirSync(models_path).join().replace(/.js/g, '').split(",");
 module.exports = {
     connection: require('./db.connection'),
     instance: require('./db.instance'),
-    crud: require('./db.common'),
+    common: require('./db.common'),
     models: models
 }

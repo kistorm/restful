@@ -73,8 +73,8 @@
 //     console.log(err,result)
 // })
 
-var CRUD = require('./index.js').crud;
-var baseinfo = new CRUD("example");
+var DB_PROCESS = require('./index.js').common;
+var baseinfo = new DB_PROCESS("example");
 function toList() {
     var params = {};
     params = {

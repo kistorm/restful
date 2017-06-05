@@ -56,7 +56,7 @@ var init = function () {
     }
     if (!env_package || !env_package.run) {
         var sequelize = require('../db/').instance.sequelize;
-        var script = require('../db/script');
+        var script = require('../db/db.script.js');
         sequelize.sync({force: true, logging: console.error})
             .then(function () {
                 env_package.run = {
