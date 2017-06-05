@@ -8,8 +8,6 @@ var controllers = require('../controllers');
 
 
 module.exports = function (app) {
-
-    console.log(global.$,1,3);
     var dynamicLoadRouter = function (route_path, controller) {
         var locate = route_path + '/:id';
         app.route(route_path).get(controller.list).post(controller.post);
@@ -18,7 +16,7 @@ module.exports = function (app) {
     models.forEach(function (modelName) {
         var route_path = "/api/rest/" + modelName;
         var controller = new controllers(modelName);
-        dynamicLoadRouter(route_path,controller);
+        dynamicLoadRouter(route_path, controller);
     })
     // return app;
 }

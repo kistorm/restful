@@ -6,8 +6,9 @@ var fs = $.packages.fs;
 var path = $.packages.path;
 var util = $.packages.lodash;
 var db = {sequelize: require('./db.connection')};
-var read = util.each((fs.readdirSync(path.join(__dirname, './models')) || []), function (dir) {
+var models = util.each((fs.readdirSync(path.join(__dirname, './models')) || []), function (dir) {
     var modelName = dir.substring(0, dir.indexOf('.js'));
     util.set(db, modelName, db.sequelize.import(path.join('./models', dir)));
 });
+util.set(db,"models",models);
 module.exports = db;
