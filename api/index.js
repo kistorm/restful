@@ -5,7 +5,3 @@ module.exports = {
     routes:require('./routes'),
     controller:require('./controllers')
 }
-var $ = require("../common");
-//console.log(ref.enums);
-//console.log($.conf.dirs.root);
-//console.log($.errors.incomplete);
