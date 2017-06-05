@@ -56,6 +56,7 @@ var init = function () {
     }
     if (!env_package || !env_package.run) {
         var sequelize = require('../db/').instance.sequelize;
+        var script = require('../db/script');
         sequelize.sync({force: true, logging: console.error})
             .then(function () {
                 env_package.run = {
@@ -65,7 +66,9 @@ var init = function () {
                     run_time: [new Date()]
                 };
                 fs.writeFileSync(path_log_json, JSON.stringify(env_package));
-                console.log("strut sync success");
+                script.init(function (err) {
+                    console.log(err ? "strut sync fail" : "strut sync success", err);
+                });
             })
             .catch(function (err) {
                 console.log(err);

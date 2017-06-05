@@ -127,11 +127,12 @@ function del() {
 }
 function add() {
     var entities =
-        {
-            "name": "222322",
-            "password": "ELBERT"
-        }
+    {
+        "name": "222322",
+        "password": "ELBERT"
+    }
     baseinfo.create(entities, function (err, result) {
-        console.log(err, result );
+        console.log(err, result);
     })
 }
+
