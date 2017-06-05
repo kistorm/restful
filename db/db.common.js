@@ -27,13 +27,14 @@
  * model.queryBySQL(sql,keys,[sqlType],callback)
  *
  */
-var enums = require('./enums.js');
-var callback_pre_exec = enums.callback_pre_exec;
+var $ = require('../common');
+var enums = $.enums;
 var sqlTypeEnums = enums.sqlTypeEnums;
-var sequelize = enums.sequelize;
-
-function crud(tableName) {
-    var Model = require('../instance/index.js')[tableName];
+var callback_pre_exec = $.util.callback_pre_exec;
+var instance = require('./db.instance.js');
+var sequelize = instance.sequelize;
+module.exports = function processer(tableName) {
+    var Model = instance[tableName];
 
     if (!tableName || !Model) throw new Error("unknow table", tableName);
 
@@ -103,7 +104,7 @@ function crud(tableName) {
         })
     };
 
-    Executer.update = function (values,param, callback) {
+    Executer.update = function (values, param, callback) {
         //修改 ,data = 将被修改的对象
         var entities = values || {};
         var where = param.where || {};
@@ -112,11 +113,11 @@ function crud(tableName) {
         sequelize.transaction(function (t) {
             return Model.update(values, {
                 where: where,
-                fields:fields,
+                fields: fields,
                 transaction: t
             });
         }).then(function (rows) {
-            callback(null,rows[0]);
+            callback(null, rows[0]);
         }).catch(function (error) {
             callback(error)
         })
@@ -139,7 +140,7 @@ function crud(tableName) {
                     }
                     return Model.destroy(opts);
                 }).then(function (data) {
-                    callback(null,data);
+                    callback(null, data);
                 }).catch(function (error) {
                     callback(error)
                 })
@@ -156,18 +157,18 @@ function crud(tableName) {
         sequelize.transaction(function (t) {
             if (Array.isArray(entity)) {
                 return Model.bulkCreate(entity, {
-                    benchmark:true,
-                    isNewRecord:true,
+                    benchmark: true,
+                    isNewRecord: true,
                     transaction: t
                 });
             }
             return Model.create(entity, {
-                benchmark:true,
-                isNewRecord:true,
+                benchmark: true,
+                isNewRecord: true,
                 transaction: t
             });
         }).then(function (data) {
-            callback(null,data);
+            callback(null, data);
         }).catch(function (error) {
             callback(error)
         })
@@ -176,4 +177,3 @@ function crud(tableName) {
     return Executer;
 
 }
-module.exports = crud;

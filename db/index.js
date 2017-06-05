@@ -7,8 +7,8 @@ var models_path = path.join(__dirname, './models');
 var models = fs.readdirSync(models_path).join().replace(/.js/g, '').split(",");
 
 module.exports = {
-    connection: require('./connection'),
-    instance: require('./instance'),
-    crud: require('./common'),
+    connection: require('./db.connection'),
+    instance: require('./db.instance'),
+    crud: require('./db.common'),
     models: models
 }

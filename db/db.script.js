@@ -1,7 +1,10 @@
-var data = require('./data.json');
-var CRUD = require('../index.js').crud;
+/**
+ * Created by kistorm on 2017/6/5.
+ */
+var data = require('./data');
+var CRUD = require('./index.js').crud;
 var baseinfo = new CRUD("example");
-exports.init = init = function (callback) {
+exports.init = function (callback) {
     callback = function (err, result) {
     };
     var sqlParams = {

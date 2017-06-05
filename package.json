@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node build.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "async": "2.1.5",

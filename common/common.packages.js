@@ -8,4 +8,4 @@ dependencies.forEach(function (key) {
 packages["path"] = require('path');
 packages["url"] = require('url');
 packages["fs"] = require('fs');
-exports.package = packages;
+exports.packages = packages;
