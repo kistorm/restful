@@ -5,7 +5,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var debug = require('debug')('bpetapi:server');
+var debug = require('debug')('rest:server');
 var http = require('http');
 var app = express();
 

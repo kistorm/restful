@@ -1,0 +1,5 @@
+{"level":"info","message":"Hello World info !","timestamp":"2017-06-07T03:40:31.792Z"}
+{"level":"error","message":"Hello World error !","timestamp":"2017-06-07T03:40:31.794Z"}
+{"level":"warn","message":"Hello World warn !","timestamp":"2017-06-07T03:40:31.797Z"}
+{"level":"info","message":"Hello World!","timestamp":"2017-06-07T03:40:31.797Z"}
+{"level":"error","message":"Hello World!","timestamp":"2017-06-07T03:40:31.797Z"}
