@@ -12,7 +12,7 @@ exports.init = function (callback) {
         modelName: ""
     }
     baseinfo.queryBySQL(sqlParams, function (err, result) {
-        if (!err) baseinfo.create(data, callback);
+        if (!err) return  baseinfo.create(data, callback);
         return callback;
     })
 }
