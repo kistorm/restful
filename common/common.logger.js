@@ -11,7 +11,7 @@ var dateFormat = function () {
 var ignoreEpipe = function (err) {
     return err.code !== 'EPIPE';
 }
-console.log(logs.all);
+
 var allLoggerTransport = new dailyRotateFile({
     name: 'all',
     filename:logs.all,
