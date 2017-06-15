@@ -3,7 +3,7 @@ var crypto = require('crypto');
 module.exports = function (sequelize, DataTypes) {
     return sequelize.define('example2', {
         name: {
-            type: DataTypes.STRING(10),
+            type: DataTypes.STRING(20),
             allowNull: false,
             unique:true,
             defaultValue: 'kistorm'
